@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = null }) {
+export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
 
@@ -67,7 +67,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
         </h2>
 
         <form className="space-y-4" onSubmit={handleSubmit(
-          (data) => onSubmit(data),
+          (data) => { onSubmitProps(data) },
           (err) => console.log("🔴 Form Validation Errors:", err)
         )} >
           <input type="hidden" {...register("task_id")} />
