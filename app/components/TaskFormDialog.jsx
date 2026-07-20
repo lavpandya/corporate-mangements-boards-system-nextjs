@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  // const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
   // const { register, handleSubmit, formState: { errors } } = useForm({
   //   defaultValues: {
@@ -19,13 +19,13 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
   //   }
   // });
 
-  const onFormSubmit = (data) => {
-    console.log("🚀 captured Data:", data);
-    if (typeof onSubmitProps === 'function') {
-      onSubmitProps(data);
-      reset();
-    }
-  };
+  // const onFormSubmit = (data) => {
+  //   console.log("🚀 captured Data:", data);
+  //   if (typeof onSubmitProps === 'function') {
+  //     onSubmitProps(data);
+  //     reset();
+  //   }
+  // };
 
   useEffect(() => {
     if (isOpen) {
@@ -129,7 +129,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg cursor-pointer transition-colors">✕</button>
         </h2>
 
-        {/* <form
+        <form
           className="space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -264,9 +264,10 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               {taskData ? "Save Changes" : "Create Task"}
             </button>
           </div>
-        </form> */}
+        </form>
         {/* -------------------------------- */}
-        <form
+
+        {/* <form
           className="space-y-4"
           onSubmit={handleSubmit(onFormSubmit)}
         >
@@ -297,7 +298,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             {errors.description && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.description.message}</p>}
           </div>
 
-          {/* असाइनी और लेबल - दोनों से name हटा दिया गया है */}
+      
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Assignee 👤</label>
@@ -349,7 +350,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             </div>
           </div>
 
-          {/* ड्यू डेट - name="due_date" हटा दिया गया है */}
+      
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Due Date</label>
             <input
@@ -362,7 +363,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             />
           </div>
 
-          {/* बटन्स */}
+      
           <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2c333a] mt-2">
             <button
               type="button"
@@ -378,7 +379,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               {taskData ? "Save Changes" : "Create Task"}
             </button>
           </div>
-        </form>
+        </form> */}
+
       </div>
     </div>
   );
