@@ -1,10 +1,21 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
+// import { useForm } from "react-hook-form";
 
 export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
-  const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  // const { register, handleSubmit, reset, formState: { errors } } = useForm();
+
+  const [formData, setFormData] = useState({
+    task_id: "",
+    title: "",
+    description: "",
+    assignee: "",
+    label: "",
+    status: "todo",
+    priority: "medium",
+    due_date: "",
+  });
 
   // const { register, handleSubmit, formState: { errors } } = useForm({
   //   defaultValues: {
@@ -27,25 +38,66 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
   //   }
   // };
 
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     if (taskData) {
+
+  //       let cleanedDate = "";
+
+  //       if (taskData.due_date) {
+  //         const dateStr = Array.isArray(taskData.due_date)
+  //           ? String(taskData.due_date[0])
+  //           : String(taskData.due_date);
+
+  //         if (dateStr.includes('T')) {
+
+  //           cleanedDate = dateStr.split('T')[0];
+  //         } else if (dateStr.includes(' ')) {
+
+  //           cleanedDate = dateStr.split(' ')[0];
+  //         } else {
+
+  //           const parts = dateStr.split('-');
+  //           if (parts[0].length === 4) {
+  //             cleanedDate = dateStr;
+  //           } else if (parts[2]?.length === 4) {
+  //             cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  //           }
+  //         }
+  //       }
+
+  //       reset({
+  //         task_id: taskData.task_id,
+  //         title: taskData.title || "",
+  //         description: taskData.description || "",
+  //         assignee: taskData.assignee || "",
+  //         label: taskData.label || "",
+  //         status: taskData.status || "todo",
+  //         priority: taskData.priority || "medium",
+  //         due_date: cleanedDate,
+  //       });
+  //     } else {
+  //       reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
+  //     }
+  //   }
+  // }, [taskData, isOpen, reset]);
+
+  // ----------------------------------------
+
   useEffect(() => {
     if (isOpen) {
       if (taskData) {
-
         let cleanedDate = "";
-
         if (taskData.due_date) {
           const dateStr = Array.isArray(taskData.due_date)
             ? String(taskData.due_date[0])
             : String(taskData.due_date);
 
           if (dateStr.includes('T')) {
-
             cleanedDate = dateStr.split('T')[0];
           } else if (dateStr.includes(' ')) {
-
             cleanedDate = dateStr.split(' ')[0];
           } else {
-
             const parts = dateStr.split('-');
             if (parts[0].length === 4) {
               cleanedDate = dateStr;
@@ -55,8 +107,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           }
         }
 
-        reset({
-          task_id: taskData.task_id,
+        setFormData({
+          task_id: taskData.task_id || "",
           title: taskData.title || "",
           description: taskData.description || "",
           assignee: taskData.assignee || "",
@@ -66,10 +118,21 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           due_date: cleanedDate,
         });
       } else {
-        reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
+
+        setFormData({
+          task_id: "",
+          title: "",
+          description: "",
+          assignee: "",
+          label: "",
+          status: "todo",
+          priority: "medium",
+          due_date: "",
+        });
       }
     }
-  }, [taskData, isOpen, reset]);
+  }, [taskData, isOpen]);
+  // ----------------------------------------
 
   // useEffect(() => {
 
@@ -111,6 +174,29 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
 
   if (!isOpen) return null;
 
+  // ----------------------------------
+
+  // 3. इनपुट चेंज हैंडलर (सभी इनपुट्स के लिए एक ही फ़ंक्शन)
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  // 4. फॉर्म सबमिट हैंडलर
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("🚀 Controlled React State Data Captured:", formData);
+
+    if (typeof onSubmitProps === 'function') {
+      onSubmitProps(formData); // पैरेंट कंपोनेंट को डेटा भेजना
+    }
+  };
+
+  // ----------------------------------
+
   const inputClass = "w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all";
   const labelClass = "text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide";
 
@@ -129,7 +215,87 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg cursor-pointer transition-colors">✕</button>
         </h2>
 
-        <form
+        {/* ------------------------------------- */}
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <input type="hidden" name="task_id" value={formData.task_id} />
+
+          {/* Title */}
+          <div className="flex flex-col gap-1.5">
+            <label className={labelClass}>Title</label>
+            <input
+              type="text"
+              placeholder="Enter task title..."
+              name="title"
+              value={formData.title}
+              onChange={handleChange}
+              required
+              className={inputClass}
+            />
+          </div>
+
+          {/* Description */}
+          <div className="flex flex-col gap-1.5">
+            <label className={labelClass}>Description</label>
+            <textarea
+              placeholder="Write task description here..."
+              name="description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className={inputClass}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {/* Assignee */}
+            <div className="flex flex-col gap-1.5">
+              <label className={labelClass}>Assignee 👤</label>
+              <input
+                type="text"
+                name="assignee"
+                placeholder="Assignee Name"
+                value={formData.assignee}
+                onChange={handleChange}
+                required
+                className={inputClass}
+              />
+            </div>
+
+            {/* Label */}
+            <div className="flex flex-col gap-1.5">
+              <label className={labelClass}>Label 🏷️</label>
+              <input
+                type="text"
+                name="label"
+                placeholder="Label (e.g. Bug, Feature)"
+                value={formData.label}
+                onChange={handleChange}
+                required
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          {/* Form Actions / Buttons */}
+          <div className="flex justify-end gap-3 border-t border-slate-100 dark:border-[#2c333a] pt-4 mt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-[#22272b] rounded-lg transition-colors cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 dark:bg-blue-600 hover:bg-indigo-700 dark:hover:bg-blue-700 rounded-lg shadow-md transition-colors cursor-pointer"
+            >
+              {taskData ? "Save Changes" : "Create Task"}
+            </button>
+          </div>
+        </form>
+        {/* ------------------------------------- */}
+
+        {/* <form
           className="space-y-4"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -264,7 +430,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               {taskData ? "Save Changes" : "Create Task"}
             </button>
           </div>
-        </form>
+        </form> */}
         {/* -------------------------------- */}
 
         {/* <form
