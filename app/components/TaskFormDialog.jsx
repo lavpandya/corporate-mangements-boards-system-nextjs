@@ -6,52 +6,103 @@ import { useForm } from "react-hook-form";
 export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
+  // const { register, handleSubmit, formState: { errors } } = useForm({
+  //   defaultValues: {
+  //     task_id: taskData?.task_id || "",
+  //     title: taskData?.title || "",
+  //     description: taskData?.description || "",
+  //     assignee: taskData?.assignee || "",
+  //     label: taskData?.label || "",
+  //     status: taskData?.status || "todo",
+  //     priority: taskData?.priority || "medium",
+  //     due_date: taskData?.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
+  //   }
+  // });
+
+  const onFormSubmit = (data) => {
+    console.log("🚀 captured Data:", data);
+    if (typeof onSubmitProps === 'function') {
+      onSubmitProps(data);
+    }
+  };
+
+  // useEffect(() => {
+  //   if (isOpen) {
+  //     if (taskData) {
+
+  //       let cleanedDate = "";
+
+  //       if (taskData.due_date) {
+  //         const dateStr = Array.isArray(taskData.due_date)
+  //           ? String(taskData.due_date[0])
+  //           : String(taskData.due_date);
+
+  //         if (dateStr.includes('T')) {
+
+  //           cleanedDate = dateStr.split('T')[0];
+  //         } else if (dateStr.includes(' ')) {
+
+  //           cleanedDate = dateStr.split(' ')[0];
+  //         } else {
+
+  //           const parts = dateStr.split('-');
+  //           if (parts[0].length === 4) {
+  //             cleanedDate = dateStr;
+  //           } else if (parts[2]?.length === 4) {
+  //             cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+  //           }
+  //         }
+  //       }
+
+  //       reset({
+  //         task_id: taskData.task_id,
+  //         title: taskData.title || "",
+  //         description: taskData.description || "",
+  //         assignee: taskData.assignee || "",
+  //         label: taskData.label || "",
+  //         status: taskData.status || "todo",
+  //         priority: taskData.priority || "medium",
+  //         due_date: cleanedDate,
+  //       });
+  //     } else {
+  //       reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
+  //     }
+  //   }
+  // }, [taskData, isOpen, reset]);
 
   useEffect(() => {
-    if (isOpen) {
-      if (taskData) {
+    if (taskData) {
+      reset({
+        task_id: taskData.task_id || "",
+        title: taskData.title || "",
+        description: taskData.description || "",
+        assignee: taskData.assignee || "",
+        label: taskData.label || "",
+        status: taskData.status || "todo",
+        priority: taskData.priority || "medium",
+        due_date: taskData.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
+      });
+    } else {
 
-        let cleanedDate = "";
-
-        if (taskData.due_date) {
-          const dateStr = Array.isArray(taskData.due_date)
-            ? String(taskData.due_date[0])
-            : String(taskData.due_date);
-
-          if (dateStr.includes('T')) {
-
-            cleanedDate = dateStr.split('T')[0];
-          } else if (dateStr.includes(' ')) {
-
-            cleanedDate = dateStr.split(' ')[0];
-          } else {
-
-            const parts = dateStr.split('-');
-            if (parts[0].length === 4) {
-              cleanedDate = dateStr;
-            } else if (parts[2]?.length === 4) {
-              cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-            }
-          }
-        }
-
-        reset({
-          task_id: taskData.task_id,
-          title: taskData.title || "",
-          description: taskData.description || "",
-          assignee: taskData.assignee || "",
-          label: taskData.label || "",
-          status: taskData.status || "todo",
-          priority: taskData.priority || "medium",
-          due_date: cleanedDate,
-        });
-      } else {
-        reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
-      }
+      reset({
+        task_id: "",
+        title: "",
+        description: "",
+        assignee: "",
+        label: "",
+        status: "todo",
+        priority: "medium",
+        due_date: ""
+      });
     }
-  }, [taskData, isOpen, reset]);
+  }, [taskData, reset]);
 
   if (!isOpen) return null;
+
+  const inputClass = "w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all";
+  const labelClass = "text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide";
+
+
 
   return (
 
@@ -205,38 +256,31 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
         {/* -------------------------------- */}
         <form
           className="space-y-4"
-          onSubmit={handleSubmit(
-            (data) => {
-              console.log("🚀 Captured Data Successfully:", data);
-              if (typeof onSubmitProps === 'function') {
-                onSubmitProps(data);
-              }
-            },
-            (err) => console.log("🔴 Form Validation Errors:", err)
-          )}
+          onSubmit={handleSubmit(onFormSubmit)}
         >
-          {/* हिडन इनपुट */}
+
           <input type="hidden" {...register("task_id")} />
 
-          {/* टाइटल - name="title" हटा दिया गया है */}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Title</label>
             <input
               type="text"
               placeholder="Enter task title..."
               {...register("title", { required: "Title is required" })}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              className={inputClass}
             />
             {errors.title && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.title.message}</p>}
           </div>
 
-          {/* डिस्क्रिप्शन - name="description" हटा दिया गया है */}
+
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Description</label>
             <textarea
               placeholder="Write task description here..."
               {...register("description", { required: "This is required" })}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none h-24 resize-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+
+              className={inputClass}
             />
             {errors.description && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.description.message}</p>}
           </div>
@@ -249,7 +293,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 type="text"
                 placeholder="Assignee Name"
                 {...register("assignee", { required: "This is required" })}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+
+                className={inputClass}
               />
               {errors.assignee && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.assignee.message}</p>}
             </div>
@@ -260,19 +305,18 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 type="text"
                 placeholder="BUG, FEATURE..."
                 {...register("label", { required: "This is required" })}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                className={inputClass}
               />
               {errors.label && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.label.message}</p>}
             </div>
           </div>
 
-          {/* स्टेटस और प्रायोरिटी - दोनों से name हटा दिया गया है */}
           <div className="grid grid-cols-2 gap-3.5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Status</label>
               <select
                 {...register("status")}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                className={inputClass}
               >
                 <option value="todo" className="dark:bg-[#1d2125]">Todo</option>
                 <option value="in_progress" className="dark:bg-[#1d2125]">In Progress</option>
@@ -284,7 +328,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Priority</label>
               <select
                 {...register("priority")}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                className={inputClass}
               >
                 <option value="low" className="dark:bg-[#1d2125]">Low</option>
                 <option value="medium" className="dark:bg-[#1d2125]">Medium</option>
@@ -299,7 +343,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             <input
               type="date"
               {...register("due_date")}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              className={inputClass}
               style={{
                 colorScheme: 'light dark',
               }}
