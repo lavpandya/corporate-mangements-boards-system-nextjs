@@ -66,12 +66,35 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg cursor-pointer transition-colors">✕</button>
         </h2>
 
-        <form className="space-y-4" onSubmit={handleSubmit(
-          (data) => { onSubmitProps(data) },
-          (err) => console.log("🔴 Form Validation Errors:", err)
-        )} >
-          <input type="hidden" {...register("task_id")} />
+        <form
+          className="space-y-4"
+          onSubmit={async (e) => {
+            e.preventDefault(); 
 
+            const formElement = e.target;
+
+           
+            const finalData = {
+              task_id: formElement.querySelector('[name="task_id"]')?.value || taskData?.task_id || "",
+              title: formElement.querySelector('[name="title"]')?.value || "",
+              description: formElement.querySelector('[name="description"]')?.value || "",
+              assignee: formElement.querySelector('[name="assignee"]')?.value || "",
+              label: formElement.querySelector('[name="label"]')?.value || "",
+              status: formElement.querySelector('[name="status"]')?.value || "todo",
+              priority: formElement.querySelector('[name="priority"]')?.value || "medium",
+              due_date: formElement.querySelector('[name="due_date"]')?.value || "",
+            };
+
+            console.log("🚀 Live HTML Data Captured:", finalData);
+
+           
+            if (typeof onSubmitProps === 'function') {
+              onSubmitProps(finalData);
+            }
+          }}
+        >
+        
+          <input type="hidden" name="task_id" defaultValue={taskData?.task_id || ""} />
 
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Title</label>
@@ -79,24 +102,22 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               type="text"
               placeholder="Enter task title..."
               name="title"
-              {...register("title", { required: "Title is required" })}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              defaultValue={taskData?.title || ""}
+              required 
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400"
             />
-            {errors.title && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.title.message}</p>}
           </div>
-
 
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Description</label>
             <textarea
               placeholder="Write task description here..."
               name="description"
-              {...register("description", { required: "This is required" })}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none h-24 resize-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              defaultValue={taskData?.description || ""}
+              required
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400"
             />
-            {errors.description && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.description.message}</p>}
           </div>
-
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
             <div className="flex flex-col gap-1.5">
@@ -105,10 +126,10 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 type="text"
                 name="assignee"
                 placeholder="Assignee Name"
-                {...register("assignee", { required: "This is required" })}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                defaultValue={taskData?.assignee || ""}
+                required
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400"
               />
-              {errors.assignee && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.assignee.message}</p>}
             </div>
 
             <div className="flex flex-col gap-1.5">
@@ -117,21 +138,20 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 type="text"
                 name="label"
                 placeholder="BUG, FEATURE..."
-                {...register("label", { required: "This is required" })}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                defaultValue={taskData?.label || ""}
+                required
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400"
               />
-              {errors.label && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.label.message}</p>}
             </div>
           </div>
-
 
           <div className="grid grid-cols-2 gap-3.5">
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Status</label>
               <select
                 name="status"
-                {...register("status")}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                defaultValue={taskData?.status || "todo"}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none"
               >
                 <option value="todo" className="dark:bg-[#1d2125]">Todo</option>
                 <option value="in_progress" className="dark:bg-[#1d2125]">In Progress</option>
@@ -143,8 +163,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Priority</label>
               <select
                 name="priority"
-                {...register("priority")}
-                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+                defaultValue={taskData?.priority || "medium"}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none"
               >
                 <option value="low" className="dark:bg-[#1d2125]">Low</option>
                 <option value="medium" className="dark:bg-[#1d2125]">Medium</option>
@@ -153,32 +173,30 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             </div>
           </div>
 
-
           <div className="flex flex-col gap-1.5">
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Due Date</label>
             <input
               type="date"
               name="due_date"
-              {...register("due_date")}
-              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all color-scheme-dark"
+              defaultValue={taskData?.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : ""}
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none"
               style={{
                 colorScheme: 'light dark',
               }}
             />
           </div>
 
-
           <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2c333a] mt-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-100 dark:bg-[#2c333a] hover:bg-slate-200 dark:hover:bg-[#343c44] font-bold rounded-lg text-xs text-slate-600 dark:text-[#9fadbc] cursor-pointer transition-colors"
+              className="px-4 py-2 text-sm text-slate-500 hover:text-slate-700"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 font-bold text-white rounded-lg text-xs shadow-md shadow-indigo-100 dark:shadow-none cursor-pointer transition-colors"
+              className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md hover:bg-blue-700"
             >
               {taskData ? "Save Changes" : "Create Task"}
             </button>
