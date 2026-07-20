@@ -19,18 +19,18 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             : String(taskData.due_date);
 
           if (dateStr.includes('T')) {
-     
+
             cleanedDate = dateStr.split('T')[0];
           } else if (dateStr.includes(' ')) {
-          
+
             cleanedDate = dateStr.split(' ')[0];
           } else {
-         
+
             const parts = dateStr.split('-');
             if (parts[0].length === 4) {
-              cleanedDate = dateStr; 
+              cleanedDate = dateStr;
             } else if (parts[2]?.length === 4) {
-              cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; 
+              cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
             }
           }
         }
@@ -78,6 +78,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             <input
               type="text"
               placeholder="Enter task title..."
+              name="title"
               {...register("title", { required: "Title is required" })}
               className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
             />
@@ -89,6 +90,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Description</label>
             <textarea
               placeholder="Write task description here..."
+              name="description"
               {...register("description", { required: "This is required" })}
               className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none h-24 resize-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
             />
@@ -101,6 +103,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Assignee 👤</label>
               <input
                 type="text"
+                name="assignee"
                 placeholder="Assignee Name"
                 {...register("assignee", { required: "This is required" })}
                 className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
@@ -112,6 +115,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Label 🏷️</label>
               <input
                 type="text"
+                name="label"
                 placeholder="BUG, FEATURE..."
                 {...register("label", { required: "This is required" })}
                 className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
@@ -125,6 +129,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Status</label>
               <select
+                name="status"
                 {...register("status")}
                 className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
               >
@@ -137,6 +142,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             <div className="flex flex-col gap-1.5">
               <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Priority</label>
               <select
+                name="priority"
                 {...register("priority")}
                 className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
               >
@@ -152,6 +158,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit, taskData = n
             <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Due Date</label>
             <input
               type="date"
+              name="due_date"
               {...register("due_date")}
               className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all color-scheme-dark"
               style={{

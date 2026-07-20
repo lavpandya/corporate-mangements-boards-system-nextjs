@@ -48,7 +48,7 @@ export default function DashboardPage() {
       const response = await updateTaskDetailsInDB(data);
       if (response.success) {
         setTasks((prev) => prev.map((t) => (t.task_id === data.task_id ? data : t)));
-        toast.success("Task updated successfully! ✏️");
+        toast.success("Task updated successfully!");
         setIsModalOpen(false);
       } else toast.error("Update Failed");
     } else {
@@ -56,7 +56,7 @@ export default function DashboardPage() {
       if (response.success) {
         const newTask = { ...data, task_id: String(response.task_id) };
         setTasks((prev) => [...prev, newTask]);
-        toast.success("New task created! 🎉");
+        toast.success("New task created!");
         setIsModalOpen(false);
       } else toast.error("New Task Create Problem");
     }
