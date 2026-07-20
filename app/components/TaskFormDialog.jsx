@@ -66,14 +66,14 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg cursor-pointer transition-colors">✕</button>
         </h2>
 
-        <form
+        {/* <form
           className="space-y-4"
           onSubmit={async (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
 
             const formElement = e.target;
 
-           
+
             const finalData = {
               task_id: formElement.querySelector('[name="task_id"]')?.value || taskData?.task_id || "",
               title: formElement.querySelector('[name="title"]')?.value || "",
@@ -87,13 +87,13 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
 
             console.log("🚀 Live HTML Data Captured:", finalData);
 
-           
+
             if (typeof onSubmitProps === 'function') {
               onSubmitProps(finalData);
             }
           }}
         >
-        
+
           <input type="hidden" name="task_id" defaultValue={taskData?.task_id || ""} />
 
           <div className="flex flex-col gap-1.5">
@@ -103,7 +103,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               placeholder="Enter task title..."
               name="title"
               defaultValue={taskData?.title || ""}
-              required 
+              required
               className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400"
             />
           </div>
@@ -197,6 +197,127 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             <button
               type="submit"
               className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md hover:bg-blue-700"
+            >
+              {taskData ? "Save Changes" : "Create Task"}
+            </button>
+          </div>
+        </form> */}
+        {/* -------------------------------- */}
+        <form
+          className="space-y-4"
+          onSubmit={handleSubmit(
+            (data) => {
+              console.log("🚀 Captured Data Successfully:", data);
+              if (typeof onSubmitProps === 'function') {
+                onSubmitProps(data);
+              }
+            },
+            (err) => console.log("🔴 Form Validation Errors:", err)
+          )}
+        >
+          {/* हिडन इनपुट */}
+          <input type="hidden" {...register("task_id")} />
+
+          {/* टाइटल - name="title" हटा दिया गया है */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Title</label>
+            <input
+              type="text"
+              placeholder="Enter task title..."
+              {...register("title", { required: "Title is required" })}
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+            />
+            {errors.title && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.title.message}</p>}
+          </div>
+
+          {/* डिस्क्रिप्शन - name="description" हटा दिया गया है */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Description</label>
+            <textarea
+              placeholder="Write task description here..."
+              {...register("description", { required: "This is required" })}
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none h-24 resize-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+            />
+            {errors.description && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.description.message}</p>}
+          </div>
+
+          {/* असाइनी और लेबल - दोनों से name हटा दिया गया है */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Assignee 👤</label>
+              <input
+                type="text"
+                placeholder="Assignee Name"
+                {...register("assignee", { required: "This is required" })}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              />
+              {errors.assignee && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.assignee.message}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Label 🏷️</label>
+              <input
+                type="text"
+                placeholder="BUG, FEATURE..."
+                {...register("label", { required: "This is required" })}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              />
+              {errors.label && <p className="text-red-500 dark:text-red-400 text-xs mt-0.5 font-medium">{errors.label.message}</p>}
+            </div>
+          </div>
+
+          {/* स्टेटस और प्रायोरिटी - दोनों से name हटा दिया गया है */}
+          <div className="grid grid-cols-2 gap-3.5">
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Status</label>
+              <select
+                {...register("status")}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              >
+                <option value="todo" className="dark:bg-[#1d2125]">Todo</option>
+                <option value="in_progress" className="dark:bg-[#1d2125]">In Progress</option>
+                <option value="done" className="dark:bg-[#1d2125]">Done</option>
+              </select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Priority</label>
+              <select
+                {...register("priority")}
+                className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none cursor-pointer focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              >
+                <option value="low" className="dark:bg-[#1d2125]">Low</option>
+                <option value="medium" className="dark:bg-[#1d2125]">Medium</option>
+                <option value="high" className="dark:bg-[#1d2125]">High</option>
+              </select>
+            </div>
+          </div>
+
+          {/* ड्यू डेट - name="due_date" हटा दिया गया है */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide">Due Date</label>
+            <input
+              type="date"
+              {...register("due_date")}
+              className="w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm bg-white dark:bg-[#22272b] text-slate-800 dark:text-white outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all"
+              style={{
+                colorScheme: 'light dark',
+              }}
+            />
+          </div>
+
+          {/* बटन्स */}
+          <div className="flex justify-end gap-3 pt-4 border-t border-slate-100 dark:border-[#2c333a] mt-2">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-slate-100 dark:bg-[#2c333a] hover:bg-slate-200 dark:hover:bg-[#343c44] font-bold rounded-lg text-xs text-slate-600 dark:text-[#9fadbc] cursor-pointer transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="px-5 py-2 bg-indigo-600 dark:bg-indigo-500 hover:bg-indigo-700 dark:hover:bg-indigo-600 font-bold text-white rounded-lg text-xs shadow-md shadow-indigo-100 dark:shadow-none cursor-pointer transition-colors"
             >
               {taskData ? "Save Changes" : "Create Task"}
             </button>
