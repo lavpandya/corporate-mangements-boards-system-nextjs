@@ -200,17 +200,18 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
   const inputClass = "w-full px-4 py-2 border border-slate-200 dark:border-[#30363d] rounded-lg text-sm outline-none bg-white dark:bg-[#22272b] text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:ring-2 focus:ring-indigo-500 dark:focus:ring-blue-500 transition-all";
   const labelClass = "text-xs font-bold text-slate-500 dark:text-[#9fadbc] uppercase tracking-wide";
 
+  const parentClass = "fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4 transition-all duration-200";
+  const parentsubClass = "bg-white dark:bg-[#1d2125] rounded-xl shadow-2xl w-full max-w-lg p-6 border border-slate-100 dark:border-[#2c333a] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150 transition-colors";
+  const innerheadingClass = "text-xl font-bold text-slate-900 dark:text-[#c7d1db] border-b border-slate-100 dark:border-[#2c333a] pb-3 flex items-center justify-between";
 
 
   return (
 
-    <div className="fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4 transition-all duration-200">
+    <div className={parentClass}>
+      <div className={parentsubClass}>
 
 
-      <div className="bg-white dark:bg-[#1d2125] rounded-xl shadow-2xl w-full max-w-lg p-6 border border-slate-100 dark:border-[#2c333a] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150 transition-colors">
-
-
-        <h2 className="text-xl font-bold text-slate-900 dark:text-[#c7d1db] border-b border-slate-100 dark:border-[#2c333a] pb-3 flex items-center justify-between">
+        <h2 className={innerheadingClass}>
           <span>{taskData ? "✏️ Edit Task Details" : "📋 Create New Task"}</span>
           <button type="button" onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white text-lg cursor-pointer transition-colors">✕</button>
         </h2>
@@ -274,6 +275,50 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 className={inputClass}
               />
             </div>
+          </div>
+          <div className="grid grid-cols-2 gap-3.5">
+            {/* Status Select */}
+            <div className="flex flex-col gap-1.5">
+              <label className={labelClass}>Status</label>
+              <select
+                name="status"
+                value={formData.status} // Controlled Value
+                onChange={handleChange}  // State Handler
+                className={inputClass}
+              >
+                <option value="todo" className="dark:bg-[#1d2125]">Todo</option>
+                <option value="in_progress" className="dark:bg-[#1d2125]">In Progress</option>
+                <option value="done" className="dark:bg-[#1d2125]">Done</option>
+              </select>
+            </div>
+
+            {/* Priority Select */}
+            <div className="flex flex-col gap-1.5">
+              <label className={labelClass}>Priority</label>
+              <select
+                name="priority"
+                value={formData.priority} // Controlled Value
+                onChange={handleChange}    // State Handler
+                className={inputClass}
+              >
+                <option value="low" className="dark:bg-[#1d2125]">Low</option>
+                <option value="medium" className="dark:bg-[#1d2125]">Medium</option>
+                <option value="high" className="dark:bg-[#1d2125]">High</option>
+              </select>
+            </div>
+          </div>
+          <div className="flex flex-col gap-1.5">
+            <label className={labelClass}>Due Date</label>
+            <input
+              type="date"
+              name="due_date"
+              value={formData.due_date} // Controlled Value (useEffect से क्लीन की हुई डेट यहाँ आएगी)
+              onChange={handleChange}   // State Handler
+              className={inputClass}
+              style={{
+                colorScheme: 'light dark',
+              }}
+            />
           </div>
 
           {/* Form Actions / Buttons */}
