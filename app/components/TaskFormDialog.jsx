@@ -27,87 +27,87 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
     }
   };
 
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     if (taskData) {
-
-  //       let cleanedDate = "";
-
-  //       if (taskData.due_date) {
-  //         const dateStr = Array.isArray(taskData.due_date)
-  //           ? String(taskData.due_date[0])
-  //           : String(taskData.due_date);
-
-  //         if (dateStr.includes('T')) {
-
-  //           cleanedDate = dateStr.split('T')[0];
-  //         } else if (dateStr.includes(' ')) {
-
-  //           cleanedDate = dateStr.split(' ')[0];
-  //         } else {
-
-  //           const parts = dateStr.split('-');
-  //           if (parts[0].length === 4) {
-  //             cleanedDate = dateStr;
-  //           } else if (parts[2]?.length === 4) {
-  //             cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  //           }
-  //         }
-  //       }
-
-  //       reset({
-  //         task_id: taskData.task_id,
-  //         title: taskData.title || "",
-  //         description: taskData.description || "",
-  //         assignee: taskData.assignee || "",
-  //         label: taskData.label || "",
-  //         status: taskData.status || "todo",
-  //         priority: taskData.priority || "medium",
-  //         due_date: cleanedDate,
-  //       });
-  //     } else {
-  //       reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
-  //     }
-  //   }
-  // }, [taskData, isOpen, reset]);
-
   useEffect(() => {
-    // 1. ड्यू डेट का फॉर्मेट सुरक्षित तरीके से संभालें
-    let formattedDate = "";
-    if (taskData?.due_date) {
-      try {
-        formattedDate = new Date(taskData.due_date).toISOString().split('T')[0];
-      } catch (e) {
-        console.error("🔴 Invalid date format:", e);
+    if (isOpen) {
+      if (taskData) {
+
+        let cleanedDate = "";
+
+        if (taskData.due_date) {
+          const dateStr = Array.isArray(taskData.due_date)
+            ? String(taskData.due_date[0])
+            : String(taskData.due_date);
+
+          if (dateStr.includes('T')) {
+
+            cleanedDate = dateStr.split('T')[0];
+          } else if (dateStr.includes(' ')) {
+
+            cleanedDate = dateStr.split(' ')[0];
+          } else {
+
+            const parts = dateStr.split('-');
+            if (parts[0].length === 4) {
+              cleanedDate = dateStr;
+            } else if (parts[2]?.length === 4) {
+              cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+          }
+        }
+
+        reset({
+          task_id: taskData.task_id,
+          title: taskData.title || "",
+          description: taskData.description || "",
+          assignee: taskData.assignee || "",
+          label: taskData.label || "",
+          status: taskData.status || "todo",
+          priority: taskData.priority || "medium",
+          due_date: cleanedDate,
+        });
+      } else {
+        reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
       }
     }
+  }, [taskData, isOpen, reset]);
 
-    // 2. अब फॉर्म को रीसेट करें
-    if (taskData && Object.keys(taskData).length > 0) {
-      reset({
-        task_id: taskData.task_id || "",
-        title: taskData.title || "",
-        description: taskData.description || "",
-        assignee: taskData.assignee || "",
-        label: taskData.label || "",
-        status: taskData.status || "todo",
-        priority: taskData.priority || "medium",
-        due_date: formattedDate, // बिल्कुल सही स्ट्रिंग फॉर्मेट
-      });
-    } else {
-      // नया टास्क बनाते समय फॉर्म को पूरी तरह खाली करें
-      reset({
-        task_id: "",
-        title: "",
-        description: "",
-        assignee: "",
-        label: "",
-        status: "todo",
-        priority: "medium",
-        due_date: ""
-      });
-    }
-  }, [taskData, reset]);
+  // useEffect(() => {
+
+  //   let formattedDate = "";
+  //   if (taskData?.due_date) {
+  //     try {
+  //       formattedDate = new Date(taskData.due_date).toISOString().split('T')[0];
+  //     } catch (e) {
+  //       console.error("🔴 Invalid date format:", e);
+  //     }
+  //   }
+
+
+  //   if (taskData && Object.keys(taskData).length > 0) {
+  //     reset({
+  //       task_id: taskData.task_id || "",
+  //       title: taskData.title || "",
+  //       description: taskData.description || "",
+  //       assignee: taskData.assignee || "",
+  //       label: taskData.label || "",
+  //       status: taskData.status || "todo",
+  //       priority: taskData.priority || "medium",
+  //       due_date: formattedDate, // बिल्कुल सही स्ट्रिंग फॉर्मेट
+  //     });
+  //   } else {
+
+  //     reset({
+  //       task_id: "",
+  //       title: "",
+  //       description: "",
+  //       assignee: "",
+  //       label: "",
+  //       status: "todo",
+  //       priority: "medium",
+  //       due_date: ""
+  //     });
+  //   }
+  // }, [taskData, reset]);
 
   if (!isOpen) return null;
 
