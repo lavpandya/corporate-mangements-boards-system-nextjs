@@ -282,8 +282,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               <label className={labelClass}>Status</label>
               <select
                 name="status"
-                value={formData.status} // Controlled Value
-                onChange={handleChange}  // State Handler
+                value={formData.status}
+                onChange={handleChange}
                 className={inputClass}
               >
                 <option value="todo" className="dark:bg-[#1d2125]">Todo</option>
@@ -312,8 +312,9 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
             <input
               type="date"
               name="due_date"
-              value={formData.due_date} // Controlled Value (useEffect से क्लीन की हुई डेट यहाँ आएगी)
-              onChange={handleChange}   // State Handler
+              value={formData.due_date}
+              onChange={handleChange}
+              required
               className={inputClass}
               style={{
                 colorScheme: 'light dark',
