@@ -54,9 +54,11 @@ export default function DashboardPage() {
     } else {
       const response = await createTaskInDB(data);
       if (response.success) {
-        const newTask = { ...data, task_id: String(response.task_id) };
-        setTasks((prev) => [...prev, newTask]);
-        toast.success("New task created!");
+        // const newTask = { ...data, task_id: String(response.task_id) };
+        // setTasks((prev) => [...prev, newTask]);
+        const updatedData = await getTasksFromDB();
+        setTasks(updatedData);
+        toast.success("Task created successfully!");
         setIsModalOpen(false);
       } else toast.error("New Task Create Problem");
     }
