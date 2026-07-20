@@ -52,11 +52,28 @@ export async function deleteTaskFromDB(task_id) {
 
 
 
+// export async function createTaskInDB(data) {
+//   try {
+//     const { title, description, assignee, label, status, priority, due_date } = data;
+//     const query = `INSERT INTO tbl_tasks (title, description, assignee, label, status, priority, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)`;
+//     const [result] = await pool.query(query, [title, description, assignee, label, status, priority, due_date]);
+//     return { success: true, task_id: result.insertId };
+//   } catch (error) {
+//     console.error(error);
+//     return { success: false, error: error.message };
+//   }
+// }
+
 export async function createTaskInDB(data) {
   try {
     const { title, description, assignee, label, status, priority, due_date } = data;
+    const finalDate = due_date === "" ? null : due_date;
+
     const query = `INSERT INTO tbl_tasks (title, description, assignee, label, status, priority, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-    const [result] = await pool.query(query, [title, description, assignee, label, status, priority, due_date]);
+
+   
+    const [result] = await pool.query(query, [title, description, assignee, label, status, priority, finalDate]);
+
     return { success: true, task_id: result.insertId };
   } catch (error) {
     console.error(error);
