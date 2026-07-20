@@ -6,26 +6,26 @@ import { useForm } from "react-hook-form";
 export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
   // const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  // const { register, handleSubmit, formState: { errors } } = useForm({
-  //   defaultValues: {
-  //     task_id: taskData?.task_id || "",
-  //     title: taskData?.title || "",
-  //     description: taskData?.description || "",
-  //     assignee: taskData?.assignee || "",
-  //     label: taskData?.label || "",
-  //     status: taskData?.status || "todo",
-  //     priority: taskData?.priority || "medium",
-  //     due_date: taskData?.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
-  //   }
-  // });
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    defaultValues: {
+      task_id: taskData?.task_id || "",
+      title: taskData?.title || "",
+      description: taskData?.description || "",
+      assignee: taskData?.assignee || "",
+      label: taskData?.label || "",
+      status: taskData?.status || "todo",
+      priority: taskData?.priority || "medium",
+      due_date: taskData?.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
+    }
+  });
 
-  // const onFormSubmit = (data) => {
-  //   console.log("🚀 captured Data:", data);
-  //   if (typeof onSubmitProps === 'function') {
-  //     onSubmitProps(data);
-  //     reset();
-  //   }
-  // };
+  const onFormSubmit = (data) => {
+    console.log("🚀 captured Data:", data);
+    if (typeof onSubmitProps === 'function') {
+      onSubmitProps(data);
+      reset();
+    }
+  };
 
   useEffect(() => {
     if (isOpen) {
