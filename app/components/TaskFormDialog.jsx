@@ -23,6 +23,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
     console.log("🚀 captured Data:", data);
     if (typeof onSubmitProps === 'function') {
       onSubmitProps(data);
+      reset();
     }
   };
 
@@ -71,7 +72,18 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
   // }, [taskData, isOpen, reset]);
 
   useEffect(() => {
-    if (taskData) {
+    // 1. ड्यू डेट का फॉर्मेट सुरक्षित तरीके से संभालें
+    let formattedDate = "";
+    if (taskData?.due_date) {
+      try {
+        formattedDate = new Date(taskData.due_date).toISOString().split('T')[0];
+      } catch (e) {
+        console.error("🔴 Invalid date format:", e);
+      }
+    }
+
+    // 2. अब फॉर्म को रीसेट करें
+    if (taskData && Object.keys(taskData).length > 0) {
       reset({
         task_id: taskData.task_id || "",
         title: taskData.title || "",
@@ -80,10 +92,10 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
         label: taskData.label || "",
         status: taskData.status || "todo",
         priority: taskData.priority || "medium",
-        due_date: taskData.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
+        due_date: formattedDate, // बिल्कुल सही स्ट्रिंग फॉर्मेट
       });
     } else {
-
+      // नया टास्क बनाते समय फॉर्म को पूरी तरह खाली करें
       reset({
         task_id: "",
         title: "",
