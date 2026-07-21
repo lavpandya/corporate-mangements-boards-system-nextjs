@@ -27,83 +27,12 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
     label: z.string().min(1, { message: "Label is required" }),
     status: z.enum(["todo", "in_progress", "done"]),
     priority: z.enum(["low", "medium", "high"]),
-    due_date: z.string().min(1, { message: "Due date is required" }).refine((dateStr) => {
-     
-      const selectedDate = new Date(dateStr);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      return selectedDate >= today;
-    }, { message: "Due date cannot be in the past" }),
+    due_date: z.string().min(1, { message: "Due date is required" }),
   });
 
   const [errors, setErrors] = useState({});
 
-  // const { register, handleSubmit, formState: { errors } } = useForm({
-  //   defaultValues: {
-  //     task_id: taskData?.task_id || "",
-  //     title: taskData?.title || "",
-  //     description: taskData?.description || "",
-  //     assignee: taskData?.assignee || "",
-  //     label: taskData?.label || "",
-  //     status: taskData?.status || "todo",
-  //     priority: taskData?.priority || "medium",
-  //     due_date: taskData?.due_date ? new Date(taskData.due_date).toISOString().split('T')[0] : "",
-  //   }
-  // });
 
-  // const onFormSubmit = (data) => {
-  //   console.log("🚀 captured Data:", data);
-  //   if (typeof onSubmitProps === 'function') {
-  //     onSubmitProps(data);
-  //     reset();
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   if (isOpen) {
-  //     if (taskData) {
-
-  //       let cleanedDate = "";
-
-  //       if (taskData.due_date) {
-  //         const dateStr = Array.isArray(taskData.due_date)
-  //           ? String(taskData.due_date[0])
-  //           : String(taskData.due_date);
-
-  //         if (dateStr.includes('T')) {
-
-  //           cleanedDate = dateStr.split('T')[0];
-  //         } else if (dateStr.includes(' ')) {
-
-  //           cleanedDate = dateStr.split(' ')[0];
-  //         } else {
-
-  //           const parts = dateStr.split('-');
-  //           if (parts[0].length === 4) {
-  //             cleanedDate = dateStr;
-  //           } else if (parts[2]?.length === 4) {
-  //             cleanedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
-  //           }
-  //         }
-  //       }
-
-  //       reset({
-  //         task_id: taskData.task_id,
-  //         title: taskData.title || "",
-  //         description: taskData.description || "",
-  //         assignee: taskData.assignee || "",
-  //         label: taskData.label || "",
-  //         status: taskData.status || "todo",
-  //         priority: taskData.priority || "medium",
-  //         due_date: cleanedDate,
-  //       });
-  //     } else {
-  //       reset({ task_id: "", title: "", description: "", assignee: "", label: "", status: "todo", priority: "medium", due_date: "" });
-  //     }
-  //   }
-  // }, [taskData, isOpen, reset]);
-
-  // ----------------------------------------
 
   useEffect(() => {
     if (isOpen) {
@@ -199,7 +128,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
 
   // ----------------------------------
 
-  // 3. इनपुट चेंज हैंडलर (सभी इनपुट्स के लिए एक ही फ़ंक्शन)
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -224,8 +153,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
     // }
     // ---------------------------------------
     e.preventDefault();
-
-    // safeParse एरर थ्रो नहीं करता, बल्कि success: true/false रिटर्न करता है
     const result = taskSchema.safeParse(formData);
 
     if (!result.success) {
