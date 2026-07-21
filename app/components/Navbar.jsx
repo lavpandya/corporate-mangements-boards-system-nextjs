@@ -53,20 +53,20 @@ export default function Navbar() {
 
 
           {/* Responsive Mobile Drawer Handler */}
-          <button
+          {/* <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden p-1.5 hover:bg-slate-100 dark:hover:bg-[#2c333a] rounded text-slate-700 dark:text-white transition"
           >
             {isMobileMenuOpen ? '✕' : '☰'}
-          </button>
+          </button> */}
         </div>
 
         {/* Mobile Popover Context Box List */}
-        {isMobileMenuOpen && (
+        {/* {isMobileMenuOpen && (
           <div className="absolute top-14 left-0 w-full bg-white dark:bg-[#1d2125] border-b border-slate-200 dark:border-[#22272b] p-4 flex flex-col gap-2 md:hidden shadow-lg z-50">
 
           </div>
-        )}
+        )} */}
       </nav>
     </>
   );
