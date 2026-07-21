@@ -52,35 +52,6 @@ export async function deleteTaskFromDB(task_id) {
 
 
 
-// export async function createTaskInDB(data) {
-//   try {
-//     const { title, description, assignee, label, status, priority, due_date } = data;
-//     const query = `INSERT INTO tbl_tasks (title, description, assignee, label, status, priority, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-//     const [result] = await pool.query(query, [title, description, assignee, label, status, priority, due_date]);
-//     return { success: true, task_id: result.insertId };
-//   } catch (error) {
-//     console.error(error);
-//     return { success: false, error: error.message };
-//   }
-// }
-
-// export async function createTaskInDB(data) {
-//   try {
-//     const { title, description, assignee, label, status, priority, due_date } = data;
-//     const finalDate = due_date === "" ? null : due_date;
-
-//     const query = `INSERT INTO tbl_tasks (title, description, assignee, label, status, priority, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)`;
-
-   
-//     const [result] = await pool.query(query, [title, description, assignee, label, status, priority, finalDate]);
-
-//     return { success: true, task_id: result.insertId };
-//   } catch (error) {
-//     console.error(error);
-//     return { success: false, error: error.message };
-//   }
-// }
-
 export async function createTaskInDB(data) {
   try {
    
@@ -92,7 +63,7 @@ export async function createTaskInDB(data) {
     const priority = data.priority || "medium";
     const finalDate = data.due_date === "" ? null : data.due_date;
 
-    // 2. सुरक्षा जांच: अगर मुख्य फ़ील्ड्स खाली हैं, तो लॉग में प्रिंट करें कि क्या आया है
+
     console.log("📥 Received Server Action Data:", data);
 
     const query = `INSERT INTO tbl_tasks (title, description, assignee, label, status, priority, due_date) VALUES (?, ?, ?, ?, ?, ?, ?)`;
