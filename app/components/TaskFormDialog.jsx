@@ -268,7 +268,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
         </h2>
 
         {/* ------------------------------------- */}
-        <form className="space-y-4" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
           <input type="hidden" name="task_id" value={formData.task_id} />
 
           {/* Title */}
@@ -280,7 +280,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               name="title"
               value={formData.title}
               onChange={handleChange}
-              required
               className={inputClass}
             />
             {errors.title && <p className={errorClass}>⚠️ {errors.title}</p>}
@@ -294,7 +293,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               name="description"
               value={formData.description}
               onChange={handleChange}
-              required
               className={inputClass}
             />
             {errors.description && <p className={errorClass}>⚠️ {errors.description}</p>}
@@ -310,7 +308,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 placeholder="Assignee Name"
                 value={formData.assignee}
                 onChange={handleChange}
-                required
                 className={inputClass}
               />
               {errors.assignee && <p className={errorClass}>⚠️ {errors.assignee}</p>}
@@ -325,7 +322,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 placeholder="Label (e.g. Bug, Feature)"
                 value={formData.label}
                 onChange={handleChange}
-                required
                 className={inputClass}
               />
               {errors.label && <p className={errorClass}>⚠️ {errors.label}</p>}
@@ -369,7 +365,6 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               name="due_date"
               value={formData.due_date}
               onChange={handleChange}
-              required
               className={inputClass}
               style={{
                 colorScheme: 'light dark',
