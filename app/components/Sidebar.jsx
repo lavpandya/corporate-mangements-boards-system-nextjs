@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Sidebar() {
   return (
-    <aside className="hidden md:flex flex-col w-64 h-full bg-slate-50 border-r border-slate-200 p-4 text-slate-700 select-none dark:bg-[#1d2125] dark:border-[#22272b] dark:text-[#9fadbc] transition-colors duration-200">
+    <aside className="hidden md:flex flex-col w-56 h-full bg-slate-50 border-r border-slate-200 p-4 text-slate-700 select-none dark:bg-[#1d2125] dark:border-[#22272b] dark:text-[#9fadbc] transition-colors duration-200">
 
       {/* Scope Identity Descriptor */}
       <div className="flex items-center gap-3 px-2 py-3 mb-5 border-b border-slate-200 dark:border-[#22272b] pb-4">

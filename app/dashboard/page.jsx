@@ -141,10 +141,10 @@ export default function DashboardPage() {
 
 
         {/* <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors shrink-0"> */}
-        <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 transition-colors shrink-0">
+        <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm grid grid-cols-1 lg:flex lg:items-center lg:justify-between gap-4 transition-colors shrink-0">
 
 
-          <div className="flex flex-nowrap items-center gap-3 flex-1 max-w-full overflow-x-auto pb-2 no-scrollbar">
+          <div className="flex flex-wrap items-center gap-3 flex-1 max-w-full overflow-x-auto pb-1">
 
 
             <input
