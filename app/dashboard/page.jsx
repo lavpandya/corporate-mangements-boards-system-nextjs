@@ -140,9 +140,11 @@ export default function DashboardPage() {
         </div>
 
 
-        <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors shrink-0">
+        {/* <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors shrink-0"> */}
+        <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm grid grid-cols-1 lg:flex lg:items-center lg:justify-between gap-4 transition-colors shrink-0">
 
-          <div className="flex flex-wrap items-center gap-3 flex-1 max-w-xlg">
+
+          <div className="flex flex-wrap items-center gap-3 flex-1 max-w-full overflow-x-auto pb-1">
 
             <input
               type="text"
@@ -195,7 +197,7 @@ export default function DashboardPage() {
 
           <button
             onClick={handleOpenAddModal}
-            className="px-4 py-1.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md transition-colors cursor-pointer shrink-0"
+            className="px-4 py-1.5 bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 text-white rounded-lg text-sm font-bold shadow-md transition-colors cursor-pointer shrink-0 w-max justify-self-end lg:w-auto"
           >
             + Add New Task
           </button>
