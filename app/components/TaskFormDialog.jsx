@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { z } from "zod";
 // import { useForm } from "react-hook-form";
 
 export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProps, taskData = null }) {
@@ -16,6 +17,26 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
     priority: "medium",
     due_date: "",
   });
+
+
+  const taskSchema = z.object({
+    task_id: z.string().optional(),
+    title: z.string().trim().min(1, { message: "Title is required" }),
+    description: z.string().trim().min(1, { message: "Description is required" }),
+    assignee: z.string().trim().min(1, { message: "Assignee is required" }),
+    label: z.string().min(1, { message: "Label is required" }),
+    status: z.enum(["todo", "in_progress", "done"]),
+    priority: z.enum(["low", "medium", "high"]),
+    due_date: z.string().min(1, { message: "Due date is required" }).refine((dateStr) => {
+      // कस्टम रूल: तारीख पास्ट (बीते हुए कल) की नहीं होनी चाहिए
+      const selectedDate = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      return selectedDate >= today;
+    }, { message: "Due date cannot be in the past" }),
+  });
+
+  const [errors, setErrors] = useState({});
 
   // const { register, handleSubmit, formState: { errors } } = useForm({
   //   defaultValues: {
@@ -130,6 +151,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
           due_date: "",
         });
       }
+      // ----------------------------------
+      setErrors({});
     }
   }, [taskData, isOpen]);
   // ----------------------------------------
@@ -183,15 +206,41 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
       ...prev,
       [name]: value,
     }));
+
+    // -------------------------------------
+
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   // 4. फॉर्म सबमिट हैंडलर
   const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("🚀 Controlled React State Data Captured:", formData);
+    // e.preventDefault();
+    // console.log("🚀 Controlled React State Data Captured:", formData);
 
-    if (typeof onSubmitProps === 'function') {
-      onSubmitProps(formData); // पैरेंट कंपोनेंट को डेटा भेजना
+    // if (typeof onSubmitProps === 'function') {
+    //   onSubmitProps(formData); 
+    // }
+    // ---------------------------------------
+    e.preventDefault();
+
+    // safeParse एरर थ्रो नहीं करता, बल्कि success: true/false रिटर्न करता है
+    const result = taskSchema.safeParse(formData);
+
+    if (!result.success) {
+      // Zod के एरर्स को आसान ऑब्जेक्ट फॉर्मेट में बदलना
+      const formattedErrors = {};
+      result.error.issues.forEach((issue) => {
+        formattedErrors[issue.path[0]] = issue.message;
+      });
+      setErrors(formattedErrors);
+    } else {
+      setErrors({});
+      console.log("🚀 Zod Verified Data:", result.data);
+      if (typeof onSubmitProps === 'function') {
+        onSubmitProps(result.data);
+      }
     }
   };
 
@@ -203,6 +252,8 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
   const parentClass = "fixed inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm z-50 p-4 transition-all duration-200";
   const parentsubClass = "bg-white dark:bg-[#1d2125] rounded-xl shadow-2xl w-full max-w-lg p-6 border border-slate-100 dark:border-[#2c333a] flex flex-col gap-4 animate-in fade-in zoom-in-95 duration-150 transition-colors";
   const innerheadingClass = "text-xl font-bold text-slate-900 dark:text-[#c7d1db] border-b border-slate-100 dark:border-[#2c333a] pb-3 flex items-center justify-between";
+
+  const errorClass = "text-red-500 dark:text-red-400 text-xs font-medium mt-1 pl-1";
 
 
   return (
@@ -232,6 +283,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               required
               className={inputClass}
             />
+            {errors.title && <p className={errorClass}>⚠️ {errors.title}</p>}
           </div>
 
           {/* Description */}
@@ -245,6 +297,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
               required
               className={inputClass}
             />
+            {errors.description && <p className={errorClass}>⚠️ {errors.description}</p>}
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
@@ -260,6 +313,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 required
                 className={inputClass}
               />
+              {errors.assignee && <p className={errorClass}>⚠️ {errors.assignee}</p>}
             </div>
 
             {/* Label */}
@@ -274,6 +328,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 required
                 className={inputClass}
               />
+              {errors.label && <p className={errorClass}>⚠️ {errors.label}</p>}
             </div>
           </div>
           <div className="grid grid-cols-2 gap-3.5">
@@ -320,6 +375,7 @@ export default function TaskFormDialog({ isOpen, onClose, onSubmit: onSubmitProp
                 colorScheme: 'light dark',
               }}
             />
+            {errors.due_date && <p className="text-red-500 text-xs mt-1">⚠️ {errors.due_date}</p>}
           </div>
 
           {/* Form Actions / Buttons */}

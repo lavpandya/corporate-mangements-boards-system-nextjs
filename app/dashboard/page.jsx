@@ -142,7 +142,7 @@ export default function DashboardPage() {
 
         <div className="bg-white dark:bg-[#1d2125] p-4 rounded-xl border border-slate-200 dark:border-[#22272b] shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4 transition-colors shrink-0">
 
-          <div className="flex flex-wrap items-center gap-3 flex-1 max-w-3xl">
+          <div className="flex flex-wrap items-center gap-3 flex-1 max-w-xlg">
 
             <input
               type="text"
